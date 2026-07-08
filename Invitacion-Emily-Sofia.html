@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bautizo de Emily Sofía</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=Parisienne&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --abyss:#4A1F3D;
+    --deep-teal:#B54B7C;
+    --mid-teal:#D77FA6;
+    --aqua:#F4C6DA;
+    --pearl:#FFF6F8;
+    --pearl-dim:#F8E8EE;
+    --coral:#FF8FA8;
+    --coral-soft:#FFC1D6;
+    --gold:#D9AE55;
+    --gold-soft:#EAD49B;
+    --ink:#4A2540;
+    --whatsapp:#25D366;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--pearl);
+    color:var(--ink);
+    font-family:'Jost',sans-serif;
+    overflow-x:hidden;
+  }
+  body.locked{overflow:hidden; height:100vh;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important;}
+  }
+  img,svg{display:block;}
+  a{-webkit-tap-highlight-color:transparent;}
+
+  /* ================= AMBIENT PARTICLE CANVAS ================= */
+  #oceanCanvas{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:1;
+    pointer-events:none;
+    mix-blend-mode:screen;
+    opacity:0.55;
+  }
+  main{position:relative; z-index:2;}
+
+  /* ================= STORYBOOK OPENING ================= */
+  #bookCover{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    display:flex;
+    background:#2A1023;
+  }
+  .book-wrap{
+    position:relative;
+    width:100%;
+    height:100%;
+    display:flex;
+    perspective:2400px;
+  }
+  .book-page{
+    position:relative;
+    width:50%;
+    height:100%;
+    background:
+      radial-gradient(140% 100% at 50% 50%, #8B3868 0%, #4A1F3D 70%, #2A1023 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:inset 0 0 80px rgba(0,0,0,0.5);
+    transition:transform 1.4s cubic-bezier(.65,.05,.36,1), opacity 1s ease 0.6s;
+    z-index:2;
+  }
+  .book-page.left{
+    border-right:2px solid rgba(217,174,85,0.4);
+    transform-origin:left center;
+  }
+  .book-page.right{
+    border-left:2px solid rgba(217,174,85,0.4);
+    transform-origin:right center;
+  }
+  .book-frame{
+    position:absolute;
+    inset:18px;
+    border:1px solid rgba(217,174,85,0.45);
+    pointer-events:none;
+  }
+  .book-page.left .book-frame{right:-1px;}
+  .book-page.right .book-frame{left:-1px;}
+  .book-title{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:var(--pearl);
+    z-index:3;
+    padding:1.5rem;
+  }
+  .book-title .eyebrow{letter-spacing:0.5em; text-transform:uppercase; font-size:0.62rem; color:var(--gold-soft); margin-bottom:1rem;}
+  .book-title h2{font-family:'Parisienne',cursive; font-size:clamp(2.2rem,7vw,3.6rem); color:var(--pearl); text-shadow:0 4px 24px rgba(0,0,0,0.4);}
+  .book-title p{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:0.95rem; color:var(--aqua); margin-top:0.8rem;}
+  .book-tap{
+    margin-top:1.6rem;
+    font-size:0.68rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+    opacity:0.85;
+    animation:pulseTap 1.8s ease-in-out infinite;
+  }
+  @keyframes pulseTap{0%,100%{opacity:0.5;} 50%{opacity:1;}}
+
+  #bookCover.opening .book-page.left{transform:rotateY(-100deg); opacity:0;}
+  #bookCover.opening .book-page.right{transform:rotateY(100deg); opacity:0;}
+  #bookCover.hidden{display:none;}
+
+  /* ================= SHARED WATER FX ================= */
+  .rays{
+    position:absolute; top:-15%; left:50%; width:240%; height:150%;
+    transform:translateX(-50%);
+    background:repeating-conic-gradient(from 258deg at 50% 0%, rgba(255,255,255,0.055) 0deg 5deg, transparent 5deg 15deg);
+    opacity:0.65;
+    animation:swayRays 16s ease-in-out infinite alternate;
+    pointer-events:none; z-index:0;
+  }
+  @keyframes swayRays{from{transform:translateX(-50%) rotate(-2deg);} to{transform:translateX(-50%) rotate(2deg);}}
+
+  .bubble{
+    position:absolute; bottom:-10%; border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0.06) 72%);
+    animation:rise linear infinite; pointer-events:none; z-index:2;
+  }
+  @keyframes rise{
+    0%{transform:translateY(0) translateX(0); opacity:0;}
+    8%{opacity:0.85;} 92%{opacity:0.4;}
+    100%{transform:translateY(-118vh) translateX(var(--drift,20px)); opacity:0;}
+  }
+
+  .sparkle{position:absolute; color:#fff; opacity:0; animation:twinkle ease-in-out infinite; pointer-events:none; z-index:2;}
+  @keyframes twinkle{0%,100%{opacity:0; transform:scale(0.6) rotate(0deg);} 50%{opacity:0.95; transform:scale(1.1) rotate(25deg);}}
+
+  .fish{position:absolute; z-index:2; animation:swim linear infinite; pointer-events:none; filter:drop-shadow(0 3px 6px rgba(0,0,0,0.15));}
+  @keyframes swim{
+    0%{transform:translateX(-15vw) translateY(0);}
+    25%{transform:translateX(28vw) translateY(-14px);}
+    50%{transform:translateX(55vw) translateY(6px);}
+    75%{transform:translateX(82vw) translateY(-10px);}
+    100%{transform:translateX(115vw) translateY(0);}
+  }
+  .fish.reverse{animation-name:swimReverse;}
+  @keyframes swimReverse{
+    0%{transform:translateX(115vw) scaleX(-1) translateY(0);}
+    25%{transform:translateX(82vw) scaleX(-1) translateY(-12px);}
+    50%{transform:translateX(55vw) scaleX(-1) translateY(8px);}
+    75%{transform:translateX(28vw) scaleX(-1) translateY(-8px);}
+    100%{transform:translateX(-15vw) scaleX(-1) translateY(0);}
+  }
+
+  .wave-row{position:absolute; left:0; width:200%; line-height:0; z-index:1;}
+  .wave-row svg{display:block; width:50%; float:left; height:auto;}
+  .wave-move-a{animation:waveDrift 18s linear infinite;}
+  .wave-move-b{animation:waveDrift 26s linear infinite reverse;}
+  @keyframes waveDrift{from{transform:translateX(0);} to{transform:translateX(-50%);}}
+
+  /* ================= HERO ================= */
+  .hero{
+    position:relative; min-height:100svh;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-end; text-align:center;
+    background:
+      radial-gradient(120% 70% at 50% 0%, #6E2C56 0%, transparent 60%),
+      linear-gradient(180deg, #38142F 0%, #8B3868 42%, #D77FA6 72%, #F4C6DA 100%);
+    overflow:hidden; padding:2rem 1.5rem 0;
+  }
+
+  .hero-top{position:relative; z-index:3; padding-top:2.4rem;}
+
+  .crown-glow{
+    width:64px; margin:0 auto 0.6rem;
+    filter:drop-shadow(0 0 10px rgba(217,174,85,0.85)) drop-shadow(0 0 22px rgba(217,174,85,0.5));
+    animation:crownPulse 2.6s ease-in-out infinite;
+  }
+  @keyframes crownPulse{
+    0%,100%{filter:drop-shadow(0 0 8px rgba(217,174,85,0.7)) drop-shadow(0 0 16px rgba(217,174,85,0.4));}
+    50%{filter:drop-shadow(0 0 14px rgba(217,174,85,1)) drop-shadow(0 0 30px rgba(217,174,85,0.65));}
+  }
+
+  .eyebrow{letter-spacing:0.5em; text-transform:uppercase; font-size:0.66rem; color:var(--gold-soft); margin-bottom:1.1rem;}
+
+  .hero-name{
+    font-family:'Parisienne',cursive;
+    font-size:clamp(3rem, 10.5vw, 6.5rem);
+    color:var(--pearl); line-height:1;
+    text-shadow:0 4px 30px rgba(0,0,0,0.3);
+  }
+
+  .hero-sub{
+    font-family:'Cormorant Garamond',serif; font-style:italic;
+    font-size:clamp(1.05rem, 2.8vw, 1.35rem);
+    color:var(--aqua); margin:1rem auto 0; max-width:30ch;
+  }
+
+  .mermaid-wrap{
+    position:relative; z-index:3; width:min(320px, 70vw);
+    margin:0.3rem auto -4px; animation:bob 6s ease-in-out infinite;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);}}
+  .mermaid-wrap svg{width:100%; height:auto;}
+  .tail-shimmer{animation:shimmer 3.4s ease-in-out infinite;}
+  @keyframes shimmer{0%,100%{opacity:0.55;} 50%{opacity:1;}}
+
+  .hero-date{
+    position:relative; z-index:3; margin:0.6rem auto 1.4rem;
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(1.2rem,3.4vw,1.6rem);
+    letter-spacing:0.08em; color:var(--pearl);
+    border-top:1px solid rgba(255,255,255,0.35); border-bottom:1px solid rgba(255,255,255,0.35);
+    padding:0.65rem 1.4rem; display:inline-block;
+  }
+
+  .countdown{
+    position:relative; z-index:3; display:flex; gap:0.9rem; justify-content:center;
+    margin:0 auto 2.2rem; flex-wrap:wrap; padding:0 1rem;
+  }
+  .cd-unit{
+    background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.3);
+    backdrop-filter:blur(6px); border-radius:10px; padding:0.7rem 0.9rem; min-width:64px;
+  }
+  .cd-num{font-family:'Cormorant Garamond',serif; font-size:1.7rem; font-weight:600; color:var(--pearl); line-height:1;}
+  .cd-label{font-size:0.6rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--aqua); margin-top:0.35rem;}
+
+  .seaweed{position:absolute; bottom:0; z-index:1; opacity:0.5; transform-origin:bottom center; animation:sway 7s ease-in-out infinite;}
+  .seaweed.left{left:-10px;}
+  .seaweed.right{right:-10px; animation-name:swayR;}
+  @keyframes sway{0%,100%{transform:rotate(-3deg);} 50%{transform:rotate(3deg);}}
+  @keyframes swayR{0%,100%{transform:scaleX(-1) rotate(-3deg);} 50%{transform:scaleX(-1) rotate(3deg);}}
+
+  .wave-divider{position:relative; z-index:3; line-height:0; margin-top:auto;}
+  .wave-divider svg{display:block; width:100%; height:auto;}
+
+  /* ================= OCEAN STRIP ================= */
+  .ocean-strip{position:relative; height:120px; background:linear-gradient(180deg, #FFF8EC 0%, #FBE4EE 100%); overflow:hidden;}
+  .ocean-strip .wave-row svg path{fill:#F6CEDE;}
+  .ocean-strip .wave-row.back svg path{fill:#FBE0EA;}
+  .ocean-strip .fish{width:34px;}
+
+  /* ================= INTRO ================= */
+  .intro{
+    max-width:620px; margin:0 auto; text-align:center;
+    padding:3.4rem 1.6rem 2.2rem; position:relative; background:var(--pearl);
+  }
+  .intro .shell-divider{width:54px; margin:0 auto 1.8rem; color:var(--coral);}
+  .intro p{
+    font-family:'Cormorant Garamond',serif; font-size:clamp(1.15rem,2.6vw,1.45rem);
+    line-height:1.75; color:var(--deep-teal);
+  }
+  .intro .signature-line{margin-top:1.6rem; font-family:'Parisienne',cursive; font-size:1.7rem; color:var(--coral);}
+
+  /* ================= TREASURES (hover sparkle) ================= */
+  .treasures{
+    background:var(--pearl);
+    padding:0 1.6rem 3.4rem;
+    display:flex; justify-content:center; gap:clamp(0.8rem,3vw,2rem);
+    flex-wrap:wrap;
+  }
+  .treasure{
+    position:relative;
+    width:58px; height:58px;
+    border-radius:50%;
+    background:linear-gradient(160deg,#ffffff,#f3ece0);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 18px -8px rgba(10,37,64,0.25);
+    cursor:pointer;
+    transition:transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .treasure svg{width:26px; height:26px; color:var(--deep-teal); transition:color 0.3s ease;}
+  .treasure:hover{
+    transform:translateY(-6px) scale(1.08);
+    box-shadow:0 16px 28px -10px rgba(217,174,85,0.55);
+  }
+  .treasure:hover svg{color:var(--coral);}
+  .spark{
+    position:absolute;
+    width:10px; height:10px;
+    color:var(--gold);
+    opacity:0;
+    transition:opacity 0.4s ease, transform 0.4s ease;
+    pointer-events:none;
+  }
+  .treasure:hover .spark{opacity:1;}
+  .spark.s1{top:-10px; left:4px; transition-delay:0s;}
+  .treasure:hover .spark.s1{transform:translate(-6px,-6px) scale(1.3);}
+  .spark.s2{top:-6px; right:-8px; transition-delay:0.08s;}
+  .treasure:hover .spark.s2{transform:translate(8px,-4px) scale(1.2);}
+  .spark.s3{bottom:-8px; left:-6px; transition-delay:0.16s;}
+  .treasure:hover .spark.s3{transform:translate(-8px,8px) scale(1.15);}
+  .spark.s4{bottom:-10px; right:0; transition-delay:0.24s;}
+  .treasure:hover .spark.s4{transform:translate(8px,8px) scale(1.25);}
+
+  /* ================= EVENTS ================= */
+  .events{
+    max-width:960px; margin:0 auto; padding:1.4rem 1.5rem 3.5rem;
+    display:grid; gap:2.2rem; grid-template-columns:1fr;
+    background:var(--pearl); position:relative;
+  }
+  @media(min-width:760px){.events{grid-template-columns:1fr 1fr;}}
+
+  .card{
+    position:relative; background:#fff; padding:2.8rem 2rem 2.4rem; text-align:center;
+    box-shadow:0 24px 50px -22px rgba(10,37,64,0.28);
+    border:1px solid rgba(217,174,85,0.3);
+    clip-path: polygon(0% 3%, 4% 0%, 96% 0%, 100% 3%, 100% 97%, 96% 100%, 4% 100%, 0% 97%);
+    transition:transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .card:hover{transform:translateY(-6px); box-shadow:0 30px 60px -22px rgba(10,37,64,0.35);}
+  .card::before{content:""; position:absolute; inset:8px; border:1px solid rgba(217,174,85,0.22); pointer-events:none;}
+  .card-icon{width:44px; height:44px; margin:0 auto 1rem; color:var(--deep-teal);}
+  .card-eyebrow{font-size:0.66rem; letter-spacing:0.35em; text-transform:uppercase; color:var(--gold); margin-bottom:0.6rem;}
+  .card h3{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:1.65rem; color:var(--abyss); margin-bottom:0.9rem;}
+  .card .place{font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--deep-teal); line-height:1.55; margin-bottom:0.3rem;}
+  .card .addr{font-size:0.83rem; color:#6a7c81; line-height:1.65; margin-bottom:1.3rem;}
+  .card .time{display:inline-block; font-family:'Cormorant Garamond',serif; font-size:1.35rem; color:var(--coral); border-top:1px solid #f0eadc; padding-top:0.9rem; margin-bottom:1.4rem; width:100%;}
+  .map-link{
+    display:inline-flex; align-items:center; gap:0.4rem; font-size:0.73rem; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--deep-teal); text-decoration:none; border:1px solid var(--deep-teal); padding:0.6rem 1.3rem; border-radius:999px;
+    transition:background 0.25s ease, color 0.25s ease;
+  }
+  .map-link:hover{background:var(--deep-teal); color:#fff;}
+  .map-link:focus-visible{outline:2px solid var(--gold); outline-offset:3px;}
+
+  /* ================= RSVP ================= */
+  .rsvp{position:relative; text-align:center; padding:4rem 1.6rem 4.5rem; background:linear-gradient(180deg, #FBE4EE 0%, #F3CADE 100%);}
+  .rsvp h2{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(1.6rem,4vw,2.1rem); color:var(--abyss); margin-bottom:0.7rem;}
+  .rsvp p{font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--deep-teal); max-width:38ch; margin:0 auto 1.8rem;}
+  .whatsapp-btn{
+    display:inline-flex; align-items:center; gap:0.6rem; background:var(--whatsapp); color:#fff; text-decoration:none;
+    font-size:0.95rem; font-weight:500; letter-spacing:0.02em; padding:0.95rem 1.8rem; border-radius:999px;
+    box-shadow:0 14px 28px -10px rgba(37,211,102,0.55);
+    transition:transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .whatsapp-btn:hover{transform:translateY(-3px); box-shadow:0 20px 34px -10px rgba(37,211,102,0.65);}
+  .whatsapp-btn svg{width:22px; height:22px; flex-shrink:0;}
+  .rsvp small{display:block; margin-top:1rem; font-size:0.72rem; color:#4d6a68; letter-spacing:0.02em;}
+
+  /* ================= FOOTER ================= */
+  .footer{
+    position:relative;
+    background:linear-gradient(180deg, #D77FA6 0%, #8B3868 55%, #38142F 100%);
+    color:var(--pearl); text-align:center; padding:5rem 1.6rem 3.2rem; overflow:hidden;
+  }
+  .footer .rays{opacity:0.35;}
+  .footer-msg{
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1.05rem,2.6vw,1.3rem);
+    max-width:34ch; margin:0 auto 1.6rem; position:relative; z-index:3;
+  }
+  .footer-name{font-family:'Parisienne',cursive; font-size:2.3rem; color:var(--gold-soft); position:relative; z-index:3;}
+  .footer .pearls{margin-top:2rem; display:flex; justify-content:center; gap:0.6rem; position:relative; z-index:3;}
+  .pearl-dot{width:8px; height:8px; border-radius:50%; background:radial-gradient(circle at 30% 30%, #fff, var(--gold-soft));}
+</style>
+</head>
+<body class="locked">
+
+<div id="bookCover">
+  <div class="book-wrap">
+    <div class="book-page left">
+      <div class="book-frame"></div>
+      <div class="book-title">
+        <p class="eyebrow">Érase una vez</p>
+        <h2>Emily Sofía</h2>
+      </div>
+    </div>
+    <div class="book-page right">
+      <div class="book-frame"></div>
+      <div class="book-title">
+        <p>Una historia de amor bajo el mar</p>
+        <p class="book-tap">Toca para abrir</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<canvas id="oceanCanvas"></canvas>
+
+<main>
+
+<section class="hero" id="top">
+  <div class="rays"></div>
+  <div id="bubbleField"></div>
+  <div id="sparkleField"></div>
+
+  <svg class="fish" style="top:22%; animation-duration:16s; animation-delay:0s;" width="46" height="26" viewBox="0 0 46 26" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M2 13 C10 2 26 2 34 13 C26 24 10 24 2 13Z" fill="#FF8FA8"/>
+    <path d="M2 13 L-8 4 L-8 22 Z" fill="#FF8FA8" transform="translate(10,0)"/>
+    <circle cx="28" cy="10" r="1.6" fill="#4A2540"/>
+  </svg>
+  <svg class="fish reverse" style="top:38%; animation-duration:22s; animation-delay:3s;" width="34" height="20" viewBox="0 0 46 26" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M2 13 C10 2 26 2 34 13 C26 24 10 24 2 13Z" fill="#EAD49B"/>
+    <path d="M2 13 L-8 4 L-8 22 Z" fill="#EAD49B" transform="translate(10,0)"/>
+    <circle cx="28" cy="10" r="1.6" fill="#4A2540"/>
+  </svg>
+  <svg class="fish" style="top:16%; animation-duration:26s; animation-delay:7s;" width="26" height="15" viewBox="0 0 46 26" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M2 13 C10 2 26 2 34 13 C26 24 10 24 2 13Z" fill="#E7B8DE"/>
+    <path d="M2 13 L-8 4 L-8 22 Z" fill="#E7B8DE" transform="translate(10,0)"/>
+    <circle cx="28" cy="10" r="1.6" fill="#4A2540"/>
+  </svg>
+
+  <svg class="seaweed left" width="70" height="180" viewBox="0 0 70 180" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M10 180C10 140 30 130 15 100C0 70 25 55 12 20" stroke="#B54B7C" stroke-width="7" stroke-linecap="round"/>
+    <path d="M30 180C30 130 50 120 38 85C26 50 48 40 34 5" stroke="#D77FA6" stroke-width="6" stroke-linecap="round"/>
+  </svg>
+  <svg class="seaweed right" width="70" height="180" viewBox="0 0 70 180" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M10 180C10 140 30 130 15 100C0 70 25 55 12 20" stroke="#B54B7C" stroke-width="7" stroke-linecap="round"/>
+    <path d="M30 180C30 130 50 120 38 85C26 50 48 40 34 5" stroke="#D77FA6" stroke-width="6" stroke-linecap="round"/>
+  </svg>
+
+  <div class="hero-top">
+    <svg class="crown-glow" viewBox="0 0 64 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="crownGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#F5DFA0"/>
+          <stop offset="100%" stop-color="#D9AE55"/>
+        </linearGradient>
+      </defs>
+      <path d="M6 38 L2 14 L18 26 L32 4 L46 26 L62 14 L58 38 Z" fill="url(#crownGrad)" stroke="#F5DFA0" stroke-width="1"/>
+      <circle cx="32" cy="10" r="2.4" fill="#FFF8EC"/>
+      <circle cx="14" cy="20" r="2" fill="#FFF8EC"/>
+      <circle cx="50" cy="20" r="2" fill="#FFF8EC"/>
+      <rect x="4" y="38" width="56" height="4" rx="1" fill="#EAD49B"/>
+    </svg>
+    <p class="eyebrow">Con la bendición de Dios</p>
+    <h1 class="hero-name">Emily Sofía</h1>
+    <p class="hero-sub">Sería un gran honor y una inmensa alegría contar con su presencia en el día de su presentación.</p>
+  </div>
+
+  <div class="hero-date" style="margin-top:1.4rem;">Sábado &nbsp;·&nbsp; 10:00 am</div>
+
+  <div class="countdown" id="countdown">
+    <div class="cd-unit"><div class="cd-num" id="cd-days">00</div><div class="cd-label">Días</div></div>
+    <div class="cd-unit"><div class="cd-num" id="cd-hours">00</div><div class="cd-label">Hrs</div></div>
+    <div class="cd-unit"><div class="cd-num" id="cd-mins">00</div><div class="cd-label">Min</div></div>
+    <div class="cd-unit"><div class="cd-num" id="cd-secs">00</div><div class="cd-label">Seg</div></div>
+  </div>
+
+  <div class="wave-divider">
+    <svg viewBox="0 0 1440 130" preserveAspectRatio="none">
+      <path d="M0,70 C240,120 480,20 720,55 C960,88 1200,20 1440,65 L1440,130 L0,130 Z" fill="#FFF8EC"/>
+    </svg>
+  </div>
+</section>
+
+<div class="ocean-strip">
+  <div class="wave-row back wave-move-b" style="bottom:0;">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C180,55 360,5 540,25 C720,45 900,5 1080,25 C1260,45 1350,15 1440,30 L1440,60 L0,60 Z"/></svg>
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C180,55 360,5 540,25 C720,45 900,5 1080,25 C1260,45 1350,15 1440,30 L1440,60 L0,60 Z"/></svg>
+  </div>
+  <div class="wave-row wave-move-a" style="bottom:0;">
+    <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0,40 C200,10 400,60 600,35 C800,10 1000,55 1200,30 C1320,15 1400,35 1440,40 L1440,70 L0,70 Z"/></svg>
+    <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0,40 C200,10 400,60 600,35 C800,10 1000,55 1200,30 C1320,15 1400,35 1440,40 L1440,70 L0,70 Z"/></svg>
+  </div>
+  <svg class="fish" style="top:30%; animation-duration:14s;" width="30" height="17" viewBox="0 0 46 26" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M2 13 C10 2 26 2 34 13 C26 24 10 24 2 13Z" fill="#B54B7C"/>
+    <path d="M2 13 L-8 4 L-8 22 Z" fill="#B54B7C" transform="translate(10,0)"/>
+  </svg>
+</div>
+
+<section class="intro">
+  <svg class="shell-divider" viewBox="0 0 60 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M30 6 C18 6 8 18 8 30 C16 26 22 34 30 34 C38 34 44 26 52 30 C52 18 42 6 30 6Z" stroke="currentColor" stroke-width="1.4"/>
+    <path d="M30 10V30M22 12L26 30M38 12L34 30" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+  </svg>
+  <p>Como una perla que emerge del mar, Emily Sofía llega a recibir la bendición de las aguas sagradas. Los invitamos a ser testigos de este momento tan especial para nuestra familia.</p>
+  <p class="signature-line">Con cariño, sus papás y madrina</p>
+</section>
+
+<div class="treasures" aria-hidden="false">
+  <div class="treasure" title="Perla">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="8" fill="currentColor" opacity="0.85"/><circle cx="9" cy="9" r="2" fill="#fff" opacity="0.6"/></svg>
+    <svg class="spark s1" viewBox="0 0 20 20" fill="currentColor"><path d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z"/></svg>
+    <svg class="spark s2" viewBox="0 0 20 20" fill="currentColor"><path d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z"/></svg>
+  </div>
+  <div class="treasure" title="Concha">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C7 3 3 9 3 15c0 2 4 3.5 9 3.5S21 17 21 15c0-6-4-12-9-12Z" stroke="currentColor" stroke-width="1.5"/><path d="M12 5v13.4M8 6.5l1.5 12M16 6.5l-1.5 12" stroke="currentColor" stroke-width="1"/></svg>
+    <svg class="spark s1" viewBox="0 0 20 20" fill="currentColor"><path d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z"/></svg>
+    <svg class="spark s3" viewBox="0 0 20 20" fill="currentColor"><path d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z"/></svg>
+  </div>
+  <div class="treasure" title="Perla">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="8" fill="currentColor" opacity="0.85"/><circle cx="9" cy="9" r="2" fill="#fff" opacity="0.6"/></svg>
+    <svg class="spark s2" viewBox="0 0 20 20" fill="currentColor"><path d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z"/></svg>
+    <svg class="spark s4" viewBox="0 0 20 20" fill="currentColor"><path d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z"/></svg>
+  </div>
+  <div class="treasure" title="Concha">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C7 3 3 9 3 15c0 2 4 3.5 9 3.5S21 17 21 15c0-6-4-12-9-12Z" stroke="currentColor" stroke-width="1.5"/><path d="M12 5v13.4M8 6.5l1.5 12M16 6.5l-1.5 12" stroke="currentColor" stroke-width="1"/></svg>
+    <svg class="spark s1" viewBox="0 0 20 20" fill="currentColor"><path d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z"/></svg>
+    <svg class="spark s3" viewBox="0 0 20 20" fill="currentColor"><path d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z"/></svg>
+  </div>
+  <div class="treasure" title="Perla">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="8" fill="currentColor" opacity="0.85"/><circle cx="9" cy="9" r="2" fill="#fff" opacity="0.6"/></svg>
+    <svg class="spark s2" viewBox="0 0 20 20" fill="currentColor"><path d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z"/></svg>
+    <svg class="spark s4" viewBox="0 0 20 20" fill="currentColor"><path d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z"/></svg>
+  </div>
+</div>
+
+<div class="ocean-strip">
+  <div class="wave-row back wave-move-a" style="bottom:0;">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C180,5 360,55 540,25 C720,5 900,45 1080,25 C1260,5 1350,35 1440,30 L1440,60 L0,60 Z"/></svg>
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,30 C180,5 360,55 540,25 C720,5 900,45 1080,25 C1260,5 1350,35 1440,30 L1440,60 L0,60 Z"/></svg>
+  </div>
+  <div class="wave-row wave-move-b" style="bottom:0;">
+    <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0,40 C200,60 400,10 600,35 C800,60 1000,15 1200,30 C1320,45 1400,25 1440,40 L1440,70 L0,70 Z"/></svg>
+    <svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0,40 C200,60 400,10 600,35 C800,60 1000,15 1200,30 C1320,45 1400,25 1440,40 L1440,70 L0,70 Z"/></svg>
+  </div>
+  <svg class="fish reverse" style="top:24%; animation-duration:18s;" width="24" height="14" viewBox="0 0 46 26" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M2 13 C10 2 26 2 34 13 C26 24 10 24 2 13Z" fill="#FF8FA8"/>
+    <path d="M2 13 L-8 4 L-8 22 Z" fill="#FF8FA8" transform="translate(10,0)"/>
+  </svg>
+</div>
+
+<section class="events" id="detalles">
+  <div class="card">
+    <svg class="card-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M24 6v10M18 12l6-6 6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 42V24c0-6.6 5.4-12 12-12s12 5.4 12 12v18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <rect x="8" y="42" width="32" height="4" rx="1" fill="currentColor"/>
+      <path d="M24 20v14M18 27h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <p class="card-eyebrow">La ceremonia</p>
+    <h3>Santa Misa</h3>
+    <p class="place">Templo Sagrado Corazón de Jesús</p>
+    <p class="addr">Residencial Los Fresnos<br>20328 Aguascalientes, Ags.</p>
+    <span class="time">10:00 am</span><br>
+    <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Templo%20Sagrado%20Coraz%C3%B3n%20de%20Jes%C3%BAs%2C%20Residencial%20Los%20Fresnos%2C%2020328%20Aguascalientes%2C%20Ags." target="_blank" rel="noopener">Cómo llegar</a>
+  </div>
+
+  <div class="card">
+    <svg class="card-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M6 34c3-3 6 3 9 0s6 3 9 0 6 3 9 0 6 3 9 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M6 41c3-3 6 3 9 0s6 3 9 0 6 3 9 0 6 3 9 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M24 8c3 4 3 8 0 12-3-4-3-8 0-12Z" fill="currentColor"/>
+      <path d="M24 14v10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <p class="card-eyebrow">La celebración</p>
+    <h3>Recepción</h3>
+    <p class="place">Terraza El Oasis</p>
+    <p class="addr">Valle del Oasis #4, Valle del Oasis 107<br>20997 Aguascalientes, Ags.</p>
+    <span class="time">3:00 pm</span><br>
+    <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Terraza%20El%20Oasis%2C%20Valle%20del%20Oasis%20%234%2C%20Valle%20del%20Oasis%20107%2C%2020997%20Aguascalientes%2C%20Ags." target="_blank" rel="noopener">Cómo llegar</a>
+  </div>
+</section>
+
+<section class="rsvp" id="confirmar">
+  <h2>Confirma tu asistencia</h2>
+  <p>Tu presencia hará este día aún más especial. Cuéntanos si nos acompañarás.</p>
+  <a class="whatsapp-btn" id="whatsappBtn" href="#" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.2-1.36a9.9 9.9 0 0 0 4.84 1.23h.01c5.5 0 9.96-4.46 9.96-9.96S17.54 2 12.04 2zm0 18.2c-1.5 0-2.98-.4-4.27-1.16l-.3-.18-3.09.81.82-3.01-.2-.31a8.2 8.2 0 0 1-1.26-4.39c0-4.54 3.7-8.24 8.3-8.24 4.6 0 8.3 3.7 8.3 8.24 0 4.54-3.7 8.24-8.3 8.24zm4.53-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.12-.17.25-.65.81-.8.97-.15.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.15-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.16-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.08 0 1.23.89 2.41 1.02 2.58.12.17 1.75 2.67 4.24 3.75.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.17-.48-.29z"/></svg>
+    Confirmar por WhatsApp
+  </a>
+  <small>Al tocar el botón se abrirá WhatsApp con un mensaje listo para enviar.</small>
+</section>
+
+<footer class="footer" id="footer">
+  <div class="rays"></div>
+  <div id="footerBubbles"></div>
+  <p class="footer-msg">"Te bendigo, hija mía, y pido que crezcas rodeada de amor, como las olas que abrazan la orilla."</p>
+  <p class="footer-name">Emily Sofía</p>
+  <div class="pearls" aria-hidden="true">
+    <span class="pearl-dot"></span><span class="pearl-dot"></span><span class="pearl-dot"></span>
+    <span class="pearl-dot"></span><span class="pearl-dot"></span>
+  </div>
+</footer>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.2/confetti.browser.min.js"></script>
+<script>
+  /* ======= EDITA AQUÍ: fecha del evento y número de WhatsApp ======= */
+  const EVENT_DATE = "2026-07-25T10:00:00";
+  const WHATSAPP_NUMBER = "524493260480";
+  const WHATSAPP_MSG = "¡Hola! Confirmo con gusto mi asistencia a la presentación de Emily Sofía 🐚💙";
+  /* =================================================================== */
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Storybook opening ---- */
+  const cover = document.getElementById('bookCover');
+  function openBook(){
+    if (!cover || cover.classList.contains('opening')) return;
+    cover.classList.add('opening');
+    document.body.classList.remove('locked');
+    setTimeout(() => cover.classList.add('hidden'), 1500);
+  }
+  cover.addEventListener('click', openBook);
+  setTimeout(openBook, prefersReduced ? 200 : 2400);
+
+  /* ---- WhatsApp link ---- */
+  const waBtn = document.getElementById('whatsappBtn');
+  if (waBtn) waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MSG)}`;
+
+  /* ---- Bubbles & sparkles ---- */
+  function seedBubbles(container, count){
+    if (!container) return;
+    for (let i = 0; i < count; i++) {
+      const b = document.createElement('div');
+      b.className = 'bubble';
+      const size = 4 + Math.random() * 16;
+      b.style.width = size + 'px';
+      b.style.height = size + 'px';
+      b.style.left = Math.random() * 100 + '%';
+      b.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
+      b.style.animationDuration = (8 + Math.random() * 10) + 's';
+      b.style.animationDelay = (Math.random() * 10) + 's';
+      container.appendChild(b);
+    }
+  }
+  function seedSparkles(container, count){
+    if (!container) return;
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      s.style.left = (5 + Math.random() * 90) + '%';
+      s.style.top = (5 + Math.random() * 55) + '%';
+      s.style.animationDuration = (2 + Math.random() * 2.5) + 's';
+      s.style.animationDelay = (Math.random() * 4) + 's';
+      s.innerHTML = '<svg width="' + (8 + Math.random()*8) + '" height="' + (8 + Math.random()*8) + '" viewBox="0 0 20 20" fill="currentColor"><path d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z"/></svg>';
+      container.appendChild(s);
+    }
+  }
+  if (!prefersReduced) {
+    seedBubbles(document.getElementById('bubbleField'), window.innerWidth < 600 ? 12 : 22);
+    seedBubbles(document.getElementById('footerBubbles'), window.innerWidth < 600 ? 8 : 14);
+    seedSparkles(document.getElementById('sparkleField'), window.innerWidth < 600 ? 10 : 18);
+  }
+
+  /* ---- Countdown ---- */
+  function tickCountdown(){
+    const target = new Date(EVENT_DATE).getTime();
+    const now = new Date().getTime();
+    const diff = target - now;
+    const els = {
+      d: document.getElementById('cd-days'), h: document.getElementById('cd-hours'),
+      m: document.getElementById('cd-mins'), s: document.getElementById('cd-secs')
+    };
+    if (!els.d) return;
+    if (diff <= 0) { els.d.textContent='00'; els.h.textContent='00'; els.m.textContent='00'; els.s.textContent='00'; return; }
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+    els.d.textContent = String(days).padStart(2,'0');
+    els.h.textContent = String(hours).padStart(2,'0');
+    els.m.textContent = String(mins).padStart(2,'0');
+    els.s.textContent = String(secs).padStart(2,'0');
+  }
+  tickCountdown();
+  setInterval(tickCountdown, 1000);
+
+  /* ---- Confetti at end of page ---- */
+  const footer = document.getElementById('footer');
+  let confettiFired = false;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !confettiFired && typeof confetti === 'function') {
+        confettiFired = true;
+        const colors = ['#E7B8DE', '#FF8FA8', '#D9AE55', '#FFF8EC', '#B54B7C'];
+        confetti({ particleCount: 100, spread: 80, startVelocity: 38, origin: { y: 0.7 }, colors });
+        setTimeout(() => confetti({ particleCount: 60, spread: 100, startVelocity: 28, origin: { x: 0.2, y: 0.6 }, colors }), 250);
+        setTimeout(() => confetti({ particleCount: 60, spread: 100, startVelocity: 28, origin: { x: 0.8, y: 0.6 }, colors }), 400);
+      }
+    });
+  }, { threshold: 0.4 });
+  if (footer) observer.observe(footer);
+
+  /* ---- Ambient ocean particle canvas (light dust + reflections) ---- */
+  const canvas = document.getElementById('oceanCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, motes = [], glints = [];
+
+  function resizeCanvas(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = document.documentElement.scrollHeight;
+  }
+  function initParticles(){
+    const count = window.innerWidth < 600 ? 40 : 80;
+    motes = Array.from({length: count}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: 0.6 + Math.random() * 1.8,
+      speed: 0.08 + Math.random() * 0.22,
+      drift: (Math.random() - 0.5) * 0.15,
+      phase: Math.random() * Math.PI * 2
+    }));
+    glints = Array.from({length: 4}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: 120 + Math.random() * 160,
+      speed: 0.05 + Math.random() * 0.08,
+      phase: Math.random() * Math.PI * 2
+    }));
+  }
+
+  function drawFrame(time){
+    ctx.clearRect(0, 0, W, H);
+
+    glints.forEach(g => {
+      g.x += Math.sin(time / 6000 + g.phase) * g.speed;
+      const alpha = 0.05 + Math.abs(Math.sin(time / 4000 + g.phase)) * 0.05;
+      const grad = ctx.createRadialGradient(g.x, g.y, 0, g.x, g.y, g.r);
+      grad.addColorStop(0, `rgba(200,240,235,${alpha})`);
+      grad.addColorStop(1, 'rgba(200,240,235,0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    motes.forEach(m => {
+      m.y -= m.speed;
+      m.x += m.drift;
+      if (m.y < -10) { m.y = H + 10; m.x = Math.random() * W; }
+      if (m.x < -10) m.x = W + 10;
+      if (m.x > W + 10) m.x = -10;
+      const alpha = 0.35 + Math.sin(time / 900 + m.phase) * 0.25;
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(255,255,255,${Math.max(0, alpha)})`;
+      ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+
+  let rafId;
+  function loop(time){
+    drawFrame(time);
+    rafId = requestAnimationFrame(loop);
+  }
+
+  resizeCanvas();
+  initParticles();
+  if (!prefersReduced) {
+    rafId = requestAnimationFrame(loop);
+  } else {
+    drawFrame(0);
+  }
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      resizeCanvas();
+      initParticles();
+    }, 200);
+  });
+</script>
+
+</body>
+</html>
