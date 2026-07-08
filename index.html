@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Presentación de Emily Sofía</title>
+<title>Bautizo de Emily Sofía</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=Parisienne&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -107,11 +107,11 @@
     padding:1.5rem;
   }
   .book-title .eyebrow{letter-spacing:0.5em; text-transform:uppercase; font-size:0.62rem; color:var(--gold-soft); margin-bottom:1rem;}
-  .book-title h2{font-family:'Parisienne',cursive; font-size:clamp(2.2rem,7vw,3.6rem); color:var(--pearl); text-shadow:0 4px 24px rgba(0,0,0,0.4);}
-  .book-title p{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:0.95rem; color:var(--aqua); margin-top:0.8rem;}
+  .book-title h2{font-family:'Parisienne',cursive; font-size:clamp(2rem,8vw,3.6rem); color:var(--pearl); text-shadow:0 4px 24px rgba(0,0,0,0.4);}
+  .book-title p{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(0.8rem,3vw,0.95rem); color:var(--aqua); margin-top:0.8rem;}
   .book-tap{
     margin-top:1.6rem;
-    font-size:0.68rem;
+    font-size:0.62rem;
     letter-spacing:0.14em;
     text-transform:uppercase;
     color:var(--gold-soft);
@@ -179,13 +179,13 @@
     background:
       radial-gradient(120% 70% at 50% 0%, #6E2C56 0%, transparent 60%),
       linear-gradient(180deg, #38142F 0%, #8B3868 42%, #D77FA6 72%, #F4C6DA 100%);
-    overflow:hidden; padding:2rem 1.5rem 0;
+    overflow:hidden; padding:2rem 1.25rem 0;
   }
 
-  .hero-top{position:relative; z-index:3; padding-top:2.4rem;}
+  .hero-top{position:relative; z-index:3; padding-top:2.4rem; width:100%;}
 
   .crown-glow{
-    width:64px; margin:0 auto 0.6rem;
+    width:56px; margin:0 auto 0.6rem;
     filter:drop-shadow(0 0 10px rgba(217,174,85,0.85)) drop-shadow(0 0 22px rgba(217,174,85,0.5));
     animation:crownPulse 2.6s ease-in-out infinite;
   }
@@ -194,51 +194,44 @@
     50%{filter:drop-shadow(0 0 14px rgba(217,174,85,1)) drop-shadow(0 0 30px rgba(217,174,85,0.65));}
   }
 
-  .eyebrow{letter-spacing:0.5em; text-transform:uppercase; font-size:0.66rem; color:var(--gold-soft); margin-bottom:1.1rem;}
+  .eyebrow{letter-spacing:0.4em; text-transform:uppercase; font-size:clamp(0.56rem,2vw,0.66rem); color:var(--gold-soft); margin-bottom:1.1rem;}
 
   .hero-name{
     font-family:'Parisienne',cursive;
-    font-size:clamp(3rem, 10.5vw, 6.5rem);
+    font-size:clamp(2.6rem, 12vw, 6.5rem);
     color:var(--pearl); line-height:1;
     text-shadow:0 4px 30px rgba(0,0,0,0.3);
+    word-break:break-word;
   }
 
   .hero-sub{
     font-family:'Cormorant Garamond',serif; font-style:italic;
-    font-size:clamp(1.05rem, 2.8vw, 1.35rem);
+    font-size:clamp(0.95rem, 3.6vw, 1.35rem);
     color:var(--aqua); margin:1rem auto 0; max-width:30ch;
   }
 
-  .mermaid-wrap{
-    position:relative; z-index:3; width:min(320px, 70vw);
-    margin:0.3rem auto -4px; animation:bob 6s ease-in-out infinite;
-  }
-  @keyframes bob{0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);}}
-  .mermaid-wrap svg{width:100%; height:auto;}
-  .tail-shimmer{animation:shimmer 3.4s ease-in-out infinite;}
-  @keyframes shimmer{0%,100%{opacity:0.55;} 50%{opacity:1;}}
-
   .hero-date{
-    position:relative; z-index:3; margin:0.6rem auto 1.4rem;
+    position:relative; z-index:3; margin:1.2rem auto 1.4rem;
     font-family:'Cormorant Garamond',serif;
-    font-size:clamp(1.2rem,3.4vw,1.6rem);
-    letter-spacing:0.08em; color:var(--pearl);
+    font-size:clamp(1.05rem,4vw,1.6rem);
+    letter-spacing:0.06em; color:var(--pearl);
     border-top:1px solid rgba(255,255,255,0.35); border-bottom:1px solid rgba(255,255,255,0.35);
-    padding:0.65rem 1.4rem; display:inline-block;
+    padding:0.65rem 1.2rem; display:inline-block;
   }
 
   .countdown{
-    position:relative; z-index:3; display:flex; gap:0.9rem; justify-content:center;
-    margin:0 auto 2.2rem; flex-wrap:wrap; padding:0 1rem;
+    position:relative; z-index:3; display:flex; gap:clamp(0.5rem,2.5vw,0.9rem); justify-content:center;
+    margin:0 auto 2.2rem; flex-wrap:wrap; padding:0 0.75rem; width:100%; max-width:420px;
   }
   .cd-unit{
     background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.3);
-    backdrop-filter:blur(6px); border-radius:10px; padding:0.7rem 0.9rem; min-width:64px;
+    backdrop-filter:blur(6px); border-radius:10px;
+    padding:0.6rem 0.5rem; flex:1 1 64px; min-width:56px; max-width:80px;
   }
-  .cd-num{font-family:'Cormorant Garamond',serif; font-size:1.7rem; font-weight:600; color:var(--pearl); line-height:1;}
-  .cd-label{font-size:0.6rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--aqua); margin-top:0.35rem;}
+  .cd-num{font-family:'Cormorant Garamond',serif; font-size:clamp(1.35rem,5vw,1.7rem); font-weight:600; color:var(--pearl); line-height:1;}
+  .cd-label{font-size:0.56rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--aqua); margin-top:0.35rem;}
 
-  .seaweed{position:absolute; bottom:0; z-index:1; opacity:0.5; transform-origin:bottom center; animation:sway 7s ease-in-out infinite;}
+  .seaweed{position:absolute; bottom:0; z-index:1; opacity:0.5; transform-origin:bottom center; animation:sway 7s ease-in-out infinite; width:clamp(40px,12vw,70px); height:auto;}
   .seaweed.left{left:-10px;}
   .seaweed.right{right:-10px; animation-name:swayR;}
   @keyframes sway{0%,100%{transform:rotate(-3deg);} 50%{transform:rotate(3deg);}}
@@ -248,7 +241,7 @@
   .wave-divider svg{display:block; width:100%; height:auto;}
 
   /* ================= OCEAN STRIP ================= */
-  .ocean-strip{position:relative; height:120px; background:linear-gradient(180deg, #FFF8EC 0%, #FBE4EE 100%); overflow:hidden;}
+  .ocean-strip{position:relative; height:clamp(70px,15vw,120px); background:linear-gradient(180deg, #FFF8EC 0%, #FBE4EE 100%); overflow:hidden;}
   .ocean-strip .wave-row svg path{fill:#F6CEDE;}
   .ocean-strip .wave-row.back svg path{fill:#FBE0EA;}
   .ocean-strip .fish{width:34px;}
@@ -256,25 +249,25 @@
   /* ================= INTRO ================= */
   .intro{
     max-width:620px; margin:0 auto; text-align:center;
-    padding:3.4rem 1.6rem 2.2rem; position:relative; background:var(--pearl);
+    padding:3rem 1.25rem 2rem; position:relative; background:var(--pearl);
   }
   .intro .shell-divider{width:54px; margin:0 auto 1.8rem; color:var(--coral);}
   .intro p{
-    font-family:'Cormorant Garamond',serif; font-size:clamp(1.15rem,2.6vw,1.45rem);
+    font-family:'Cormorant Garamond',serif; font-size:clamp(1.05rem,3.6vw,1.45rem);
     line-height:1.75; color:var(--deep-teal);
   }
-  .intro .signature-line{margin-top:1.6rem; font-family:'Parisienne',cursive; font-size:1.7rem; color:var(--coral);}
+  .intro .signature-line{margin-top:1.6rem; font-family:'Parisienne',cursive; font-size:clamp(1.4rem,5vw,1.7rem); color:var(--coral);}
 
   /* ================= TREASURES (hover sparkle) ================= */
   .treasures{
     background:var(--pearl);
-    padding:0 1.6rem 3.4rem;
-    display:flex; justify-content:center; gap:clamp(0.8rem,3vw,2rem);
+    padding:0 1.25rem 3rem;
+    display:flex; justify-content:center; gap:clamp(0.6rem,3vw,2rem);
     flex-wrap:wrap;
   }
   .treasure{
     position:relative;
-    width:58px; height:58px;
+    width:clamp(46px,12vw,58px); height:clamp(46px,12vw,58px);
     border-radius:50%;
     background:linear-gradient(160deg,#ffffff,#f3ece0);
     display:flex; align-items:center; justify-content:center;
@@ -308,14 +301,14 @@
 
   /* ================= EVENTS ================= */
   .events{
-    max-width:960px; margin:0 auto; padding:1.4rem 1.5rem 3.5rem;
-    display:grid; gap:2.2rem; grid-template-columns:1fr;
+    max-width:960px; margin:0 auto; padding:1.4rem 1.25rem 3rem;
+    display:grid; gap:1.8rem; grid-template-columns:1fr;
     background:var(--pearl); position:relative;
   }
-  @media(min-width:760px){.events{grid-template-columns:1fr 1fr;}}
+  @media(min-width:760px){.events{grid-template-columns:1fr 1fr; gap:2.2rem;}}
 
   .card{
-    position:relative; background:#fff; padding:2.8rem 2rem 2.4rem; text-align:center;
+    position:relative; background:#fff; padding:clamp(2rem,6vw,2.8rem) clamp(1.25rem,5vw,2rem) 2.2rem; text-align:center;
     box-shadow:0 24px 50px -22px rgba(10,37,64,0.28);
     border:1px solid rgba(217,174,85,0.3);
     clip-path: polygon(0% 3%, 4% 0%, 96% 0%, 100% 3%, 100% 97%, 96% 100%, 4% 100%, 0% 97%);
@@ -323,48 +316,63 @@
   }
   .card:hover{transform:translateY(-6px); box-shadow:0 30px 60px -22px rgba(10,37,64,0.35);}
   .card::before{content:""; position:absolute; inset:8px; border:1px solid rgba(217,174,85,0.22); pointer-events:none;}
-  .card-icon{width:44px; height:44px; margin:0 auto 1rem; color:var(--deep-teal);}
-  .card-eyebrow{font-size:0.66rem; letter-spacing:0.35em; text-transform:uppercase; color:var(--gold); margin-bottom:0.6rem;}
-  .card h3{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:1.65rem; color:var(--abyss); margin-bottom:0.9rem;}
-  .card .place{font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--deep-teal); line-height:1.55; margin-bottom:0.3rem;}
-  .card .addr{font-size:0.83rem; color:#6a7c81; line-height:1.65; margin-bottom:1.3rem;}
-  .card .time{display:inline-block; font-family:'Cormorant Garamond',serif; font-size:1.35rem; color:var(--coral); border-top:1px solid #f0eadc; padding-top:0.9rem; margin-bottom:1.4rem; width:100%;}
+  .card-icon{width:40px; height:40px; margin:0 auto 1rem; color:var(--deep-teal);}
+  .card-eyebrow{font-size:0.62rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:0.6rem;}
+  .card h3{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(1.4rem,5vw,1.65rem); color:var(--abyss); margin-bottom:0.9rem;}
+  .card .place{font-family:'Cormorant Garamond',serif; font-size:clamp(0.95rem,3.5vw,1.05rem); color:var(--deep-teal); line-height:1.55; margin-bottom:0.3rem;}
+  .card .addr{font-size:0.8rem; color:#6a7c81; line-height:1.65; margin-bottom:1.3rem; word-wrap:break-word;}
+  .card .time{display:inline-block; font-family:'Cormorant Garamond',serif; font-size:clamp(1.2rem,4.5vw,1.35rem); color:var(--coral); border-top:1px solid #f0eadc; padding-top:0.9rem; margin-bottom:1.4rem; width:100%;}
   .map-link{
-    display:inline-flex; align-items:center; gap:0.4rem; font-size:0.73rem; letter-spacing:0.12em; text-transform:uppercase;
-    color:var(--deep-teal); text-decoration:none; border:1px solid var(--deep-teal); padding:0.6rem 1.3rem; border-radius:999px;
+    display:inline-flex; align-items:center; gap:0.4rem; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--deep-teal); text-decoration:none; border:1px solid var(--deep-teal); padding:0.6rem 1.2rem; border-radius:999px;
     transition:background 0.25s ease, color 0.25s ease;
   }
   .map-link:hover{background:var(--deep-teal); color:#fff;}
   .map-link:focus-visible{outline:2px solid var(--gold); outline-offset:3px;}
 
   /* ================= RSVP ================= */
-  .rsvp{position:relative; text-align:center; padding:4rem 1.6rem 4.5rem; background:linear-gradient(180deg, #FBE4EE 0%, #F3CADE 100%);}
-  .rsvp h2{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(1.6rem,4vw,2.1rem); color:var(--abyss); margin-bottom:0.7rem;}
-  .rsvp p{font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--deep-teal); max-width:38ch; margin:0 auto 1.8rem;}
+  .rsvp{position:relative; text-align:center; padding:clamp(2.6rem,8vw,4rem) 1.25rem clamp(3rem,9vw,4.5rem); background:linear-gradient(180deg, #FBE4EE 0%, #F3CADE 100%);}
+  .rsvp h2{font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(1.4rem,5vw,2.1rem); color:var(--abyss); margin-bottom:0.7rem;}
+  .rsvp p{font-family:'Cormorant Garamond',serif; font-size:clamp(1rem,3.6vw,1.1rem); color:var(--deep-teal); max-width:38ch; margin:0 auto 1.8rem;}
   .whatsapp-btn{
     display:inline-flex; align-items:center; gap:0.6rem; background:var(--whatsapp); color:#fff; text-decoration:none;
-    font-size:0.95rem; font-weight:500; letter-spacing:0.02em; padding:0.95rem 1.8rem; border-radius:999px;
+    font-size:clamp(0.85rem,3.2vw,0.95rem); font-weight:500; letter-spacing:0.02em; padding:0.9rem 1.5rem; border-radius:999px;
     box-shadow:0 14px 28px -10px rgba(37,211,102,0.55);
     transition:transform 0.25s ease, box-shadow 0.25s ease;
+    max-width:100%;
   }
   .whatsapp-btn:hover{transform:translateY(-3px); box-shadow:0 20px 34px -10px rgba(37,211,102,0.65);}
   .whatsapp-btn svg{width:22px; height:22px; flex-shrink:0;}
-  .rsvp small{display:block; margin-top:1rem; font-size:0.72rem; color:#4d6a68; letter-spacing:0.02em;}
+  .rsvp small{display:block; margin-top:1rem; font-size:0.7rem; color:#4d6a68; letter-spacing:0.02em; padding:0 0.5rem;}
 
   /* ================= FOOTER ================= */
   .footer{
     position:relative;
     background:linear-gradient(180deg, #D77FA6 0%, #8B3868 55%, #38142F 100%);
-    color:var(--pearl); text-align:center; padding:5rem 1.6rem 3.2rem; overflow:hidden;
+    color:var(--pearl); text-align:center; padding:clamp(3.2rem,10vw,5rem) 1.25rem 3rem; overflow:hidden;
   }
   .footer .rays{opacity:0.35;}
   .footer-msg{
-    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(1.05rem,2.6vw,1.3rem);
+    font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(0.95rem,3.6vw,1.3rem);
     max-width:34ch; margin:0 auto 1.6rem; position:relative; z-index:3;
   }
-  .footer-name{font-family:'Parisienne',cursive; font-size:2.3rem; color:var(--gold-soft); position:relative; z-index:3;}
+  .footer-name{font-family:'Parisienne',cursive; font-size:clamp(1.8rem,7vw,2.3rem); color:var(--gold-soft); position:relative; z-index:3;}
   .footer .pearls{margin-top:2rem; display:flex; justify-content:center; gap:0.6rem; position:relative; z-index:3;}
   .pearl-dot{width:8px; height:8px; border-radius:50%; background:radial-gradient(circle at 30% 30%, #fff, var(--gold-soft));}
+
+  /* ================= SMALL-SCREEN REFINEMENTS ================= */
+  @media (max-width:380px){
+    .hero{padding:1.5rem 1rem 0;}
+    .countdown{gap:0.4rem;}
+    .cd-unit{padding:0.5rem 0.35rem; min-width:50px;}
+    .card{padding:1.75rem 1rem 1.8rem;}
+  }
+
+  @media (max-height:600px) and (orientation:landscape){
+    .hero{min-height:auto; padding-top:1.2rem; padding-bottom:1.2rem;}
+    .hero-top{padding-top:1rem;}
+    .countdown{margin-bottom:1.2rem;}
+  }
 </style>
 </head>
 <body class="locked">
@@ -413,11 +421,11 @@
     <circle cx="28" cy="10" r="1.6" fill="#4A2540"/>
   </svg>
 
-  <svg class="seaweed left" width="70" height="180" viewBox="0 0 70 180" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <svg class="seaweed left" viewBox="0 0 70 180" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <path d="M10 180C10 140 30 130 15 100C0 70 25 55 12 20" stroke="#B54B7C" stroke-width="7" stroke-linecap="round"/>
     <path d="M30 180C30 130 50 120 38 85C26 50 48 40 34 5" stroke="#D77FA6" stroke-width="6" stroke-linecap="round"/>
   </svg>
-  <svg class="seaweed right" width="70" height="180" viewBox="0 0 70 180" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <svg class="seaweed right" viewBox="0 0 70 180" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <path d="M10 180C10 140 30 130 15 100C0 70 25 55 12 20" stroke="#B54B7C" stroke-width="7" stroke-linecap="round"/>
     <path d="M30 180C30 130 50 120 38 85C26 50 48 40 34 5" stroke="#D77FA6" stroke-width="6" stroke-linecap="round"/>
   </svg>
@@ -441,7 +449,7 @@
     <p class="hero-sub">Sería un gran honor y una inmensa alegría contar con su presencia en el día de su presentación.</p>
   </div>
 
-  <div class="hero-date" style="margin-top:1.4rem;">Sábado &nbsp;·&nbsp; 10:00 am</div>
+  <div class="hero-date">Sábado &nbsp;·&nbsp; 10:00 am</div>
 
   <div class="countdown" id="countdown">
     <div class="cd-unit"><div class="cd-num" id="cd-days">00</div><div class="cd-label">Días</div></div>
